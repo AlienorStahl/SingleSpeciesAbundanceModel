@@ -54,7 +54,7 @@ bX_transformation <- function(universe.number # universe number considered
   file_name <- paste0("Results/Sample.size_", n.sites, "/Simul_universe_", universe.number, ".RData")
   load(file_name)
   # seeing which parameter is the most important (higher value)
-  bX_ordered <- data.frame(t(apply(-bX[c("b1", "b2", "b3"),], 2, rank)))
+  bX_ordered <- data.frame(t(apply(-abs(bX[c("b1", "b2", "b3"),]), 2, rank)))
   colnames(bX_ordered) <- c("b1", "b2", "b3")
   # Setting most important parameter as "high" performing model with a single variable
   bX_summary <- data.frame(ifelse(bX_ordered == 1, "Mod.1V.high", ifelse(bX_ordered==2, "Mod.1V.mid", "Mod.1V.low")))
@@ -193,7 +193,7 @@ format_oracle <- function(n.species # number of species
                           , "Avg_Abund.tot", "Avg_Abund.mean", "Avg_occupancy")
   for (i in universes) {
     # loading all data
-    file_name <- paste0("Results/Sample.size", n.sites, "/Simul_universe_", i, ".RData")
+    file_name <- paste0("Results/Sample.size_", n.sites, "/Simul_universe_", i, ".RData")
     load(file_name)
     
     # formating the data on abundance and PA
@@ -329,7 +329,7 @@ plot_PA_correlation <- function(metrics_data # formatted data from format_metric
   bins_temp <- quantile(metrics_data$Avg_occupancy, probs = seq(0, 1, 0.05), digits=7)
   metrics_data$bins_occur <- cut(metrics_data$Avg_occupancy, breaks=bins_temp, include.lowest = TRUE)
   
-  data_oracle <- format_oracle(n.species, universes)
+  data_oracle <- format_oracle(n.species, universes, n.sites)
   bins_temp <- quantile(data_oracle$Avg_Abund.mean, probs = seq(0, 1, 0.05), digits=7)
   data_oracle$bins_abund<- cut(data_oracle$Avg_Abund.mean, breaks=bins_temp, include.lowest = TRUE)
   bins_temp <- quantile(data_oracle$Avg_occupancy, probs = seq(0, 1, 0.05), digits=7)
@@ -782,7 +782,7 @@ plot_abund_correlation <- function(metrics_data # formatted data from format_met
   bins_temp <- quantile(metrics_data$Avg_occupancy, probs = seq(0, 1, 0.05), digits=7)
   metrics_data$bins_occur <- cut(metrics_data$Avg_occupancy, breaks=bins_temp, include.lowest = TRUE)
   
-  data_oracle <- format_oracle(n.species, universes)
+  data_oracle <- format_oracle(n.species, universes, n.sites)
   bins_temp <- quantile(data_oracle$Avg_Abund.mean, probs = seq(0, 1, 0.05), digits=7)
   data_oracle$bins_abund<- cut(data_oracle$Avg_Abund.mean, breaks=bins_temp, include.lowest = TRUE)
   bins_temp <- quantile(data_oracle$Avg_occupancy, probs = seq(0, 1, 0.05), digits=7)
